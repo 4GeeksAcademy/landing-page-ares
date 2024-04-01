@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
+// const ESLintPlugin = require('eslint-webpack-plugin');
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
 
 const port = 3000;
@@ -33,23 +33,36 @@ module.exports = {
           use: ['babel-loader']
         },
         {
-          test: /\.(css)$/, use: [{
-              loader: "style-loader" // creates style nodes from JS strings
-          }, {
-              loader: "css-loader" // translates CSS into CommonJS
-          }]
-        }, //css only files
+          test: /\.(css)$/,
+          use: [
+              "style-loader", // creates style nodes from JS strings
+              "css-loader" // translates CSS into CommonJS
+          ]
+        },
+        // Regla para archivos SCSS
+        {
+          test: /\.scss$/,
+          use: [
+              "style-loader", // injects CSS into the DOM by injecting a `<style>` tag
+              "css-loader",   // interprets `@import` and `url()` like `import/require()` and will resolve them
+              "sass-loader"  // compiles Sass to CSS
+          ]
+        },
         { 
-          test: /\.(png|svg|jpg|gif)$/, use: {
+          test: /\.(png|svg|jpg|gif)$/, 
+          use: {
             loader: 'file-loader',
             options: { name: '[name].[ext]' } 
           }
-        }, //for images
-        { test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/, use: ['file-loader'] } //for fonts
+        }, // for images
+        { 
+          test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/, 
+          use: ['file-loader'] 
+        } // for fonts
     ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx']
+    extensions: ['*', '.js', '.jsx', '.scss']
   },
   devtool: "source-map",
   devServer: {
@@ -73,5 +86,7 @@ module.exports = {
         favicon: '4geeks.ico',
         template: 'template.html'
     }),
+    // Asegúrate de comentar o eliminar ErrorOverlayPlugin si no lo estás usando
+    // new ErrorOverlayPlugin(),
   ]
 };
